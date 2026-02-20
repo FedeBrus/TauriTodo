@@ -8,6 +8,6 @@
             await invoke('delete_all');
         }"
     >
-        Clear All
+        <img class="delete_all" src="../assets/delete_all.svg" alt="delete all">
     </button>
 </template>

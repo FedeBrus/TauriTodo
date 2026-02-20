@@ -31,7 +31,7 @@
 
 <template>
     <div>
-        <div>
+        <div class="main-control">
             <h1 class="main-title">Tasks:</h1>
             <ClearAll />
         </div>

@@ -10,17 +10,30 @@
 }
 
 .main-title {
-  padding: 1em;
+  padding: 1em 0;
   font-size: 2em;
 }
 
 .task-list {
-  margin: 0em 2em;
   font-size: 1.4em;
 }
 
+.main-application {
+  margin: 0em 2em;
+}
+
 .task-list-item {
-  padding: 0.2em
+  height: 2em;
+  padding: 0 0.4em;
+  align-content: center;
+}
+
+img {
+  width: 1.2em;
+}
+
+.delete, .delete_all {
+  width: 1.6em;
 }
 
 .task-checkbox {
@@ -31,12 +44,32 @@
   text-align: center;
 }
 
-.form-control {
+.task {
   font-size: 1rem;
-  display: grid;
-  grid-template-columns: 1em auto;
+  display: flex;             /* Attiva il layout flex */
+  align-items: center;       /* Allinea verticalmente checkbox e bottone al centro */
+  justify-content: space-between; /* Spinge il primo elemento a sinistra e l'ultimo a destra */
+  width: 100%;
+}
+
+.task label {
+  display: flex;
   align-items: center;
-  gap: 1em;
+  gap: 10px;                 /* Spazio tra checkbox e testo */
+  cursor: pointer;
+}
+
+.main-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 auto;
+}
+
+input[type="text"] {
+  width: 100%;
+  font-size: 1rem;
 }
 
 input[type="checkbox"] {
@@ -54,10 +87,18 @@ input[type="checkbox"]::before {
   width: 0.65em;
   height: 0.65em;
   transform: scale(0);
-  transition: 120ms transform ease-in-out;
   box-shadow: inset 1em 1em var(--fg-color);
 }
 
 input[type="checkbox"]:checked::before {
   transform: scale(1);
+}
+
+button {
+  border-radius: 4px;
+  padding: 0.2em;
+}
+
+button:hover {
+  background-color: #505050;
 }

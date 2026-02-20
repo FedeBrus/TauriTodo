@@ -1,5 +1,7 @@
 <template>
-    <li class="todo-list-item centered">
-        <button>+</button>
+    <li class="task-list-item centered">
+        <button>
+            <img src="../assets/add.svg" alt="add">
+        </button>
     </li>
 </template>

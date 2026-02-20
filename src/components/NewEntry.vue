@@ -14,7 +14,7 @@
 </script>
 
 <template>
-    <li>
+    <li class="task-list-item">
         <input
             ref="input" 
             v-model="text" 

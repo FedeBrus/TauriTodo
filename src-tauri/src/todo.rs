@@ -46,10 +46,12 @@ pub async fn add_task(app: AppHandle, msg: String) -> Result<Task, String> {
 #[tauri::command]
 pub async fn get_tasks(app: AppHandle) -> Result<Vec<Task>, String> {
     let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
-    let tasks: Vec<Task> = store.values()
+    let mut tasks: Vec<Task> = store.values()
         .into_iter()
         .filter_map(|val| serde_json::from_value(val).ok())
         .collect();
+        
+    tasks.sort_by_key(|t| t.msg.clone().to_lowercase());
 
     Ok(tasks)
 }

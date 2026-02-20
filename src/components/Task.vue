@@ -36,8 +36,8 @@
 
 <template>
     <li class="task-list-item">
-        <div>
-            <label class="form-control">
+        <div class="task">
+            <label>
                 <input 
                     type="checkbox" 
                     class="task-checkbox"
@@ -51,7 +51,7 @@
                     await invoke('delete_task', { id: props.task_value.id })
                 }"
             >
-                Delete
+                <img class="delete" src="../assets/delete.svg" alt="delete">
             </button>
         </div>
     </li>
