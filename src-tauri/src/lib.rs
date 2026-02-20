@@ -8,7 +8,10 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             todo::add_task, 
             todo::get_tasks,
-            todo::delete_all
+            todo::delete_all,
+            todo::delete_task,
+            todo::mark_as_complete,
+            todo::mark_as_incomplete
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

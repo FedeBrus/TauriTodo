@@ -12,12 +12,12 @@
 
     listen('list-changed', _ => refresh());
 
-    async function toggleAdding() {
+    function toggleAdding() {
         isAdding.value = true;
     }
 
     async function refresh() {
-        invoke('get_tasks')
+        await invoke('get_tasks')
         .then((task_list) => {
             tasks.value = task_list
         })
@@ -44,8 +44,8 @@
                 v-if="isAdding" 
                 ref="newEntry" 
                 @lose-focus="() => { isAdding = false }" 
-                @save-task="(text) => { 
-                    invoke('add_task', { msg: text })
+                @save-task="async (text) => { 
+                    await invoke('add_task', { msg: text })
                     .then((task) => console.log(task)) 
                     .catch((e) => console.error(e))
                     isAdding = false;

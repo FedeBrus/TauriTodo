@@ -3,9 +3,11 @@
 </script>
 
 <template>
-    <button @click="() => {
-        invoke('delete_all');
-    }">
+    <button 
+        @click="async () => {
+            await invoke('delete_all');
+        }"
+    >
         Clear All
     </button>
 </template>

@@ -3,7 +3,9 @@ use serde_json::json;
 use tauri::{AppHandle, Emitter};
 use tauri_plugin_store::StoreExt;
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+const STORE_PATH: &str = "tasks.json";
+
+#[derive(Debug, serde::Serialize, serde::Deserialize, PartialEq)]
 enum TaskStatus {
     DONE,
     TODO
@@ -33,7 +35,7 @@ impl Task {
 
 #[tauri::command]
 pub async fn add_task(app: AppHandle, msg: String) -> Result<Task, String> {
-    let store = app.store("kanban.json").map_err(|e| e.to_string())?;
+    let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
     let new_task = Task::new(&msg);
     store.set(new_task.id.clone(), json!(new_task));
     app.emit("list-changed", "").unwrap();
@@ -43,7 +45,7 @@ pub async fn add_task(app: AppHandle, msg: String) -> Result<Task, String> {
 
 #[tauri::command]
 pub async fn get_tasks(app: AppHandle) -> Result<Vec<Task>, String> {
-    let store = app.store("kanban.json").map_err(|e| e.to_string())?;
+    let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
     let tasks: Vec<Task> = store.values()
         .into_iter()
         .filter_map(|val| serde_json::from_value(val).ok())
@@ -54,9 +56,52 @@ pub async fn get_tasks(app: AppHandle) -> Result<Vec<Task>, String> {
 
 #[tauri::command]
 pub async fn delete_all(app: AppHandle) -> Result<(), String> {
-    let store = app.store("kanban.json").map_err(|e| e.to_string())?;
+    let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
     store.clear();
     app.emit("list-changed", "").unwrap();
     Ok(())
 }
 
+#[tauri::command]
+pub async fn delete_task(app: AppHandle, id: String) -> Result<(), String> {
+    let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
+    store.delete(id);
+    app.emit("list-changed", "").unwrap();
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn mark_as_complete(app: AppHandle, id: String) -> Result<(), String> {
+    let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
+    if let Some(value) = store.get(&id) {
+
+        let mut task: Task = serde_json::from_value(value).map_err(|e| e.to_string())?;
+
+        if task.status == TaskStatus::TODO {
+            task.status = TaskStatus::DONE;
+        }        
+
+        store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
+        store.save().map_err(|e| e.to_string())?;
+    }
+    app.emit("list-changed", "").unwrap();
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn mark_as_incomplete(app: AppHandle, id: String) -> Result<(), String> {
+    let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
+    if let Some(value) = store.get(&id) {
+
+        let mut task: Task = serde_json::from_value(value).map_err(|e| e.to_string())?;
+
+        if task.status == TaskStatus::DONE {
+            task.status = TaskStatus::TODO;
+        }        
+
+        store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
+        store.save().map_err(|e| e.to_string())?;
+    }
+    app.emit("list-changed", "").unwrap();
+    Ok(())
+}
