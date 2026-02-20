@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --bg-color: #282828;
+  --fg-color: #ebdbb2;
+
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+  font-family: "Robto"
+}
+
+.main-title {
+  padding: 1em;
+  font-size: 2em;
+}
+
+.task-list {
+  margin: 0em 2em;
+  font-size: 1.4em;
+}
+
+.task-list-item {
+  padding: 0.2em
+}
+
+.task-checkbox {
+  margin: 1em;
+}
+
+.centered {
+  text-align: center;
+}
+
+.form-control {
+  font-size: 1rem;
+  display: grid;
+  grid-template-columns: 1em auto;
+  align-items: center;
+  gap: 1em;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  margin: 0;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid;
+  display: grid;
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--fg-color);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
