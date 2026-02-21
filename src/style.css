@@ -29,15 +29,11 @@
 }
 
 img {
-  width: 1.2em;
-}
-
-.delete, .delete_all {
-  width: 1.6em;
-}
-
-.edit {
   width: 1.4em;
+}
+
+.edit .delete, .delete_all {
+  width: 1.8em;
 }
 
 .task-checkbox {
@@ -72,7 +68,7 @@ img {
 }
 
 input[type="text"] {
-  width: 100%;
+  width: 50ch;
   font-size: 1rem;
 }
 
@@ -105,4 +101,9 @@ button {
 
 button:hover {
   background-color: #505050;
+}
+
+.task-control {
+  display: flex;
+  align-items: center;
 }

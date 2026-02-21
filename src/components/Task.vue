@@ -7,6 +7,7 @@
     const isEditing = ref(false);
     const taskInput = ref(null);
     const taskText = ref("");
+    const date = ref("");
 
     function statusToBoolean(status) {
         if (status == "DONE") {
@@ -45,12 +46,14 @@
 
     onMounted(() => {
         isChecked.value = statusToBoolean(props.task_value.status);
-        taskText.value = props.task_value.msg;
+        taskText.value = props.task_value.text;
+        date.value = props.task_value.date;
     });
 
     watch(() => props.task_value, (newState) => {
         isChecked.value = statusToBoolean(newState.status);
-        taskText.value = newState.msg;
+        taskText.value = newState.text;
+        date.value = newState.date;
     });
 </script>
 
@@ -73,7 +76,8 @@
                     @keydown.enter="saveEdit"
                 >
             </label>
-            <div>
+            <div class="task-control">
+                <div>{{ date }}</div>
                 <button
                     @click="async () => {
                         await invoke('delete_task', { id: props.task_value.id })

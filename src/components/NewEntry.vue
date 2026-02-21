@@ -22,5 +22,10 @@
             @blur="() => { emit('lose-focus'); }"
             @keydown.enter="() => { emit('save-task', text) }"
         >
+        <input 
+            ref="dateInput"
+            v-model="date"
+            type="date"
+        >
     </li>
 </template>
