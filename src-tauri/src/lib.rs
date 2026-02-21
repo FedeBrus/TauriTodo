@@ -11,7 +11,8 @@ pub fn run() {
             todo::delete_all,
             todo::delete_task,
             todo::mark_as_complete,
-            todo::mark_as_incomplete
+            todo::mark_as_incomplete,
+            todo::edit_task_text
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

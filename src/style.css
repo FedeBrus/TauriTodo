@@ -36,6 +36,10 @@ img {
   width: 1.6em;
 }
 
+.edit {
+  width: 1.4em;
+}
+
 .task-checkbox {
   margin: 1em;
 }

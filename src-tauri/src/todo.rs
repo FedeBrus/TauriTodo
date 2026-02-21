@@ -28,7 +28,21 @@ impl Task {
     }
 
     pub fn complete(&mut self) {
-        self.status = TaskStatus::DONE
+        if self.status == TaskStatus::TODO {
+            self.status = TaskStatus::DONE;
+        }
+    }
+
+    pub fn incomplete(&mut self) {
+        if self.status == TaskStatus::DONE {
+            self.status = TaskStatus::TODO;
+        }
+    }
+
+    pub fn update_text(&mut self, new_text: &str) {
+        if !new_text.is_empty() {
+            self.msg = String::from(new_text);
+        }
     }
 }
 
@@ -79,9 +93,7 @@ pub async fn mark_as_complete(app: AppHandle, id: String) -> Result<(), String> 
 
         let mut task: Task = serde_json::from_value(value).map_err(|e| e.to_string())?;
 
-        if task.status == TaskStatus::TODO {
-            task.status = TaskStatus::DONE;
-        }        
+        task.complete();
 
         store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
         store.save().map_err(|e| e.to_string())?;
@@ -96,14 +108,29 @@ pub async fn mark_as_incomplete(app: AppHandle, id: String) -> Result<(), String
     if let Some(value) = store.get(&id) {
 
         let mut task: Task = serde_json::from_value(value).map_err(|e| e.to_string())?;
-
-        if task.status == TaskStatus::DONE {
-            task.status = TaskStatus::TODO;
-        }        
+        
+        task.incomplete();
 
         store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
         store.save().map_err(|e| e.to_string())?;
     }
+    app.emit("list-changed", "").unwrap();
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn edit_task_text(app: AppHandle, id: String, msg: String) -> Result<(), String> {
+    let store = app.store(STORE_PATH).map_err(|e| e.to_string())?;
+
+    if let Some(value) = store.get(&id) {
+        let mut task: Task = serde_json::from_value(value).map_err(|e| e.to_string())?;
+
+        task.update_text(&msg);
+
+        store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
+        store.save().map_err(|e| e.to_string())?;
+    }
+
     app.emit("list-changed", "").unwrap();
     Ok(())
 }
