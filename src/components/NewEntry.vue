@@ -1,31 +1,60 @@
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, onUnmounted } from 'vue';
 
-    const input = ref(null);
+    const props = defineProps(['text, expiration']);
+    const textInput = ref(null);
+    const dateInput = ref(null);
     const text = ref("");
+    const expiration = ref("");
+    const taskContainer = ref(null);
 
     const emit = defineEmits(['lose-focus', 'save-task']);
 
     onMounted(() => {
-        input.value.focus();
+        textInput.value.focus();
+        window.addEventListener('mousedown', handleClickOutside);
     });
+
+    onUnmounted(() => {
+        window.removeEventListener('mousedown', handleClickOutside);
+    });
+
+    function handleClickOutside(event) {
+        if (taskContainer.value.contains(event.target)) return;
+        emit('lose-focus');
+    }
+
+    function checkForSubmit() {
+        if (text.value == "" || !expiration.value || expiration.value < new Date().toISOString().slice(0, 10)) {
+            emit('lose-focus');
+        } else {
+            emit('save-task', text.value, expiration.value);
+        }
+    }
 
     defineExpose({ focus });
 </script>
 
 <template>
-    <li class="task-list-item">
+    <li 
+        ref="taskContainer"
+        class="task-list-item"
+    >
         <input
-            ref="input" 
+            ref="textInput" 
             v-model="text" 
             type="text" 
-            @blur="() => { emit('lose-focus'); }"
-            @keydown.enter="() => { emit('save-task', text) }"
         >
         <input 
             ref="dateInput"
-            v-model="date"
+            v-model="expiration"
             type="date"
+            @change="() => { dateInput.focus(); }"
         >
+        <button 
+            @click="checkForSubmit" 
+        >
+            Confirm
+        </button>
     </li>
 </template>

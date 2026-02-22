@@ -44,8 +44,8 @@
                 v-if="isAdding" 
                 ref="newEntry" 
                 @lose-focus="() => { isAdding = false }" 
-                @save-task="async (text) => { 
-                    await invoke('add_task', { msg: text })
+                @save-task="async (text, expiration) => { 
+                    await invoke('add_task', { text: text, expiration: expiration })
                     .then((task) => console.log(task)) 
                     .catch((e) => console.error(e))
                     isAdding = false;

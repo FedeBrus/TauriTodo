@@ -20,7 +20,7 @@ pub struct Task {
     text: String,
     status: TaskStatus,
     date: NaiveDate,
-    expiration: Option<NaiveDate>
+    expiration: NaiveDate
 }
 
 fn string_to_date_value(str: Option<&str>) -> Result<u32, String> {
@@ -38,23 +38,13 @@ fn string_to_datetime(expiration_string: &str) -> Result<NaiveDate, String> {
 }
 
 impl Task {
-    pub fn new(text: &str) -> Self {
+    pub fn new(text: &str, expiration: &str) -> Self {
         Self {
             id: Uuid::new_v4().to_string(),
             text: text.to_string(),
             status: TaskStatus::TODO,
             date: Local::now().date_naive(),
-            expiration: None 
-        }
-    }
-
-    pub fn new_with_expiration(text: &str, expiration: String) -> Self {
-        Self {
-            id: Uuid::new_v4().to_string(),
-            text: text.to_string(),
-            status: TaskStatus::TODO,
-            date: Local::now().date_naive(),
-            expiration: string_to_datetime(&expiration).ok()
+            expiration: string_to_datetime(&expiration).ok().unwrap_or(Local::now().date_naive())
         }
     }
 
@@ -86,9 +76,9 @@ fn emit_list_change(app: &AppHandle) {
 }
 
 #[tauri::command]
-pub async fn add_task(app: AppHandle, msg: String) -> Result<Task, String> {
+pub async fn add_task(app: AppHandle, text: String, expiration: String) -> Result<Task, String> {
     let store = get_store(&app)?;
-    let new_task = Task::new(&msg);
+    let new_task = Task::new(&text, &expiration);
     store.set(new_task.id.clone(), json!(new_task));
     emit_list_change(&app);
     Ok(new_task)
