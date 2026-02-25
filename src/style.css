@@ -6,7 +6,7 @@
 
     background-color: var(--bg-color);
     color: var(--fg-color);
-    font-family: "Robto";
+    font-family: "Roboto";
 }
 
 .main-title {
@@ -56,16 +56,16 @@ img {
 
 .task {
     font-size: 1rem;
-    display: flex; /* Attiva il layout flex */
-    align-items: center; /* Allinea verticalmente checkbox e bottone al centro */
-    justify-content: space-between; /* Spinge il primo elemento a sinistra e l'ultimo a destra */
+    display: grid;
+    grid-template-columns: 50% 20% 20% auto;
+    justify-items: start;
     width: 100%;
 }
 
 .task label {
     display: flex;
     align-items: center;
-    gap: 10px; /* Spazio tra checkbox e testo */
+    gap: 10px;
     cursor: pointer;
 }
 

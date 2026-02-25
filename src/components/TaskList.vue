@@ -54,6 +54,13 @@ onMounted(() => {
             <ClearAll />
         </div>
         <ul class="task-list">
+            <li class="task-list-item">
+                <div class="task">
+                    <div>Task:</div>
+                    <div>Due to:</div>
+                    <div>Created in:</div>
+                </div>
+            </li>
             <Task
                 v-for="task in tasks"
                 :task_id="task.id"

@@ -78,7 +78,6 @@ function handleClickOutside(event) {
                 />
             </label>
             <label class="due">
-                Due to:
                 <input
                     ref="expirationInput"
                     type="date"
