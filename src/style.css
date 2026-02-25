@@ -1,113 +1,136 @@
 @import "tailwindcss";
 
 :root {
-  --bg-color: #282828;
-  --fg-color: #ebdbb2;
+    --bg-color: #282828;
+    --fg-color: #ebdbb2;
 
-  background-color: var(--bg-color);
-  color: var(--fg-color);
-  font-family: "Robto"
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    font-family: "Robto";
 }
 
 .main-title {
-  padding: 1em 0;
-  font-size: 2em;
+    padding: 1em 0;
+    font-size: 2em;
 }
 
 .task-list {
-  font-size: 1.4em;
+    font-size: 1.4em;
 }
 
 .main-application {
-  margin: 0em 2em;
+    margin: 0em 2em;
 }
 
 .task-list-item {
-  height: 2em;
-  padding: 0 0.4em;
-  align-content: center;
+    height: 2em;
+    padding: 0 0.4em;
+    align-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+label.due {
+    font-size: 1rem;
 }
 
 img {
-  width: 1.4em;
+    width: 1.4em;
 }
 
-.edit .delete, .delete_all {
-  width: 1.8em;
+.edit .delete,
+.delete_all,
+.confirm,
+.add {
+    width: 1.8rem;
 }
 
 .task-checkbox {
-  margin: 1em;
+    margin: 1em;
 }
 
 .centered {
-  text-align: center;
+    text-align: center;
 }
 
 .task {
-  font-size: 1rem;
-  display: flex;             /* Attiva il layout flex */
-  align-items: center;       /* Allinea verticalmente checkbox e bottone al centro */
-  justify-content: space-between; /* Spinge il primo elemento a sinistra e l'ultimo a destra */
-  width: 100%;
+    font-size: 1rem;
+    display: flex; /* Attiva il layout flex */
+    align-items: center; /* Allinea verticalmente checkbox e bottone al centro */
+    justify-content: space-between; /* Spinge il primo elemento a sinistra e l'ultimo a destra */
+    width: 100%;
 }
 
 .task label {
-  display: flex;
-  align-items: center;
-  gap: 10px;                 /* Spazio tra checkbox e testo */
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spazio tra checkbox e testo */
+    cursor: pointer;
 }
 
 .main-control {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
 }
 
 input[type="text"] {
-  width: 50ch;
-  font-size: 1rem;
+    width: 50ch;
+    font-size: 1rem;
 }
 
-input[type="date"] {
-  font-size: 1rem;
+input[type="date"],
+input[type="date"]:disabled {
+    color: var(--fg-color);
+    -webkit-text-fill-color: var(--fg-color);
+    font-size: 1rem;
 }
 
 input[type="checkbox"] {
-  appearance: none;
-  margin: 0;
-  width: 1.15em;
-  height: 1.15em;
-  border: 0.15em solid;
-  display: grid;
-  place-content: center;
+    appearance: none;
+    margin: 0;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid;
+    display: grid;
+    place-content: center;
 }
 
 input[type="checkbox"]::before {
-  content: "";
-  width: 0.65em;
-  height: 0.65em;
-  transform: scale(0);
-  box-shadow: inset 1em 1em var(--fg-color);
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    box-shadow: inset 1em 1em var(--fg-color);
 }
 
 input[type="checkbox"]:checked::before {
-  transform: scale(1);
+    transform: scale(1);
 }
 
 button {
-  border-radius: 4px;
-  padding: 0.2em;
+    border-radius: 4px;
+    padding: 0.2em;
 }
 
 button:hover {
-  background-color: #505050;
+    background-color: #505050;
 }
 
 .task-control {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
+}
+
+select {
+    appearance: none; /* Rimuove lo stile nativo */
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    padding: 8px 12px;
+    border: 1px solid var(--fg-color);
+    border-radius: 4px;
+    cursor: pointer;
 }

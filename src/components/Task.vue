@@ -1,95 +1,128 @@
 <script setup>
-    import { invoke } from '@tauri-apps/api/core';
-    import { nextTick, ref, onMounted, watch } from 'vue';
+import { invoke } from "@tauri-apps/api/core";
+import { nextTick, ref, onMounted, onUnmounted, watch } from "vue";
 
-    const props = defineProps(['task_value']);
-    const isChecked = ref(false);
-    const isEditing = ref(false);
-    const taskInput = ref(null);
-    const taskText = ref("");
-    const date = ref("");
+const props = defineProps(["text"]);
+const isEditing = ref(false);
+const taskContainer = ref(null);
 
-    function statusToBoolean(status) {
-        if (status == "DONE") {
-            return true;
-        } else if (status == "TODO") {
-            return false;
-        } else {
-            return false;
-        }
+const taskInput = ref(null);
+const expirationInput = ref(null);
+
+function statusToBoolean(status) {
+    if (status == "DONE") {
+        return true;
+    } else if (status == "TODO") {
+        return false;
+    } else {
+        return false;
     }
+}
 
-    async function handleChange() {
-        if (isChecked.value) {
-            await invoke('mark_as_complete', { id: props.task_value.id })
-                .catch((e) => console.log(e));
-        } else {
-            await invoke('mark_as_incomplete', { id: props.task_value.id })
-                .catch((e) => console.log(e));
-        }
+async function handleChange() {
+    if (!isChecked.value) {
+        await invoke("mark_as_complete", { id: props.task_id }).catch((e) =>
+            console.log(e),
+        );
+    } else {
+        await invoke("mark_as_incomplete", { id: props.task_id }).catch((e) =>
+            console.log(e),
+        );
     }
+}
 
-    async function handleEdit() {
-        isEditing.value = true; 
-        await nextTick(); 
-        taskInput.value.focus();
-        taskInput.value.select(); 
-    }
+async function handleEdit() {
+    isEditing.value = true;
+    await nextTick();
+    taskInput.value.focus();
+    taskInput.value.select();
+}
 
-    async function saveEdit() {
-        await invoke('edit_task_text', {
-            id: props.task_value.id,
-            msg: taskText.value
-        }).catch((e) => console.log(e)) 
-        isEditing.value = false;
-    }
+async function saveEdit() {
+    await invoke("edit_task", {
+        id: props.task_id,
+        // text: taskText.value,
+        // expiration: taskExpiration.value,
+    }).catch((e) => console.log(e));
+    isEditing.value = false;
+}
 
-    onMounted(() => {
-        isChecked.value = statusToBoolean(props.task_value.status);
-        taskText.value = props.task_value.text;
-        date.value = props.task_value.date;
-    });
+onMounted(() => {
+    window.addEventListener("mousedown", handleClickOutside);
+});
 
-    watch(() => props.task_value, (newState) => {
-        isChecked.value = statusToBoolean(newState.status);
-        taskText.value = newState.text;
-        date.value = newState.date;
-    });
+onUnmounted(() => {
+    window.removeEventListener("mousedown", handleClickOutside);
+});
+
+function handleClickOutside(event) {
+    // mettere tutti i prop
+    if (taskContainer.value.contains(event.target)) return;
+    saveEdit();
+}
 </script>
 
 <template>
     <li class="task-list-item">
-        <div class="task">
+        <div class="task" ref="taskContainer">
             <label>
-                <input 
-                    type="checkbox" 
+                <input
+                    ref="checkbox"
+                    type="checkbox"
                     class="task-checkbox"
-                    v-model="isChecked"
-                    @change="handleChange()"
+                    :checked="statusToBoolean(props.task_value.status)"
+                    @click="handleChange()"
                 />
                 <input
                     ref="taskInput"
                     type="text"
-                    v-model="taskText"
+                    text="props.task_value.text"
                     :disabled="!isEditing"
-                    @blur="() => { isEditing = false }"
-                    @keydown.enter="saveEdit"
-                >
+                />
+            </label>
+            <label class="due">
+                Due to:
+                <input
+                    ref="expirationInput"
+                    type="date"
+                    :disabled="!isEditing"
+                    @change="
+                        () => {
+                            expirationInput.focus();
+                        }
+                    "
+                />
             </label>
             <div class="task-control">
-                <div>{{ date }}</div>
+                <input type="date" disabled="true" />
                 <button
-                    @click="async () => {
-                        await invoke('delete_task', { id: props.task_value.id })
-                    }"
+                    @click="
+                        async () => {
+                            await invoke('delete_task', {
+                                id: props.task_value.id,
+                            });
+                        }
+                    "
                 >
-                    <img class="delete" src="../assets/delete.svg" alt="delete">
+                    <img
+                        class="delete"
+                        src="../assets/delete.svg"
+                        alt="delete"
+                    />
+                </button>
+                <button @click="handleEdit" v-if="!isEditing">
+                    <img class="edit" src="../assets/edit.svg" alt="edit" />
                 </button>
                 <button
-                    @click="handleEdit"
-                    :disabled="isEditing"
+                    class="confirm"
+                    @click="
+                        () => {
+                            saveEdit();
+                        }
+                    "
+                    v-if="isEditing"
                 >
-                    <img class="edit" src="../assets/edit.svg" alt="edit">
+                    <img src="../assets/confirm.svg" alt="confirm" />
                 </button>
             </div>
         </div>

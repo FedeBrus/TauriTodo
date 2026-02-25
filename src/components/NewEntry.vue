@@ -5,7 +5,7 @@
     const textInput = ref(null);
     const dateInput = ref(null);
     const text = ref("");
-    const expiration = ref("");
+    const expiration = ref(new Date().toISOString().slice(0, 10));
     const taskContainer = ref(null);
 
     const emit = defineEmits(['lose-focus', 'save-task']);
@@ -45,16 +45,20 @@
             v-model="text" 
             type="text" 
         >
-        <input 
-            ref="dateInput"
-            v-model="expiration"
-            type="date"
-            @change="() => { dateInput.focus(); }"
-        >
-        <button 
+        <label class="due">
+            Due to:
+            <input 
+                ref="dateInput"
+                v-model="expiration"
+                type="date"
+                @change="() => { dateInput.focus(); }"
+            >
+        </label>
+        <button
+            class="confirm" 
             @click="checkForSubmit" 
         >
-            Confirm
+            <img src="../assets/confirm.svg" alt="confirm">
         </button>
     </li>
 </template>
