@@ -10,8 +10,7 @@ pub fn run() {
             todo::get_tasks,
             todo::delete_all,
             todo::delete_task,
-            todo::mark_as_complete,
-            todo::mark_as_incomplete,
+            todo::toggle_status,
             todo::edit_task,
         ])
         .run(tauri::generate_context!())

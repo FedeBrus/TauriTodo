@@ -77,17 +77,14 @@ impl Task {
         }
     }
 
-    pub fn complete(&mut self) {
+    pub fn toggle(&mut self) {
         if self.status == TaskStatus::Todo {
             self.status = TaskStatus::Done;
-        }
-    }
-
-    pub fn incomplete(&mut self) {
-        if self.status == TaskStatus::Done {
+        } else {
             self.status = TaskStatus::Todo;
         }
     }
+
 
     pub fn update_text(&mut self, new_text: &str) {
         if !new_text.is_empty() {
@@ -154,26 +151,12 @@ pub async fn delete_task(app: AppHandle, id: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn mark_as_complete(app: AppHandle, id: String) -> Result<(), String> {
+pub async fn toggle_status(app: AppHandle, id: String) -> Result<(), String> {
     let store = get_store(&app)?;
     if let Some(value) = store.get(&id) {
         let mut task: Task = serde_json::from_value(value).map_err(|e| e.to_string())?;
 
-        task.complete();
-
-        store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
-    }
-    emit_list_change(&app);
-    Ok(())
-}
-
-#[tauri::command]
-pub async fn mark_as_incomplete(app: AppHandle, id: String) -> Result<(), String> {
-    let store = get_store(&app)?;
-    if let Some(value) = store.get(&id) {
-        let mut task: Task = serde_json::from_value(value).map_err(|e| e.to_string())?;
-
-        task.incomplete();
+        task.toggle();
 
         store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
     }

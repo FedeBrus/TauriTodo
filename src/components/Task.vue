@@ -2,7 +2,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import { nextTick, ref, onMounted, onUnmounted, watch } from "vue";
 
-const props = defineProps(["text"]);
+const props = defineProps([
+    "task_text",
+    "task_status",
+    "task_expiration",
+    "task_date",
+    "task_id",
+]);
 const isEditing = ref(false);
 const taskContainer = ref(null);
 
@@ -10,25 +16,17 @@ const taskInput = ref(null);
 const expirationInput = ref(null);
 
 function statusToBoolean(status) {
-    if (status == "DONE") {
+    if (status == "Done") {
         return true;
-    } else if (status == "TODO") {
-        return false;
     } else {
         return false;
     }
 }
 
 async function handleChange() {
-    if (!isChecked.value) {
-        await invoke("mark_as_complete", { id: props.task_id }).catch((e) =>
-            console.log(e),
-        );
-    } else {
-        await invoke("mark_as_incomplete", { id: props.task_id }).catch((e) =>
-            console.log(e),
-        );
-    }
+    await invoke("toggle_status", { id: props.task_id }).catch((e) =>
+        console.log(e),
+    );
 }
 
 async function handleEdit() {
@@ -41,8 +39,8 @@ async function handleEdit() {
 async function saveEdit() {
     await invoke("edit_task", {
         id: props.task_id,
-        // text: taskText.value,
-        // expiration: taskExpiration.value,
+        text: taskInput.value.value,
+        expiration: expirationInput.value.value,
     }).catch((e) => console.log(e));
     isEditing.value = false;
 }
@@ -56,7 +54,6 @@ onUnmounted(() => {
 });
 
 function handleClickOutside(event) {
-    // mettere tutti i prop
     if (taskContainer.value.contains(event.target)) return;
     saveEdit();
 }
@@ -70,13 +67,13 @@ function handleClickOutside(event) {
                     ref="checkbox"
                     type="checkbox"
                     class="task-checkbox"
-                    :checked="statusToBoolean(props.task_value.status)"
+                    :checked="statusToBoolean(props.task_status)"
                     @click="handleChange()"
                 />
                 <input
                     ref="taskInput"
                     type="text"
-                    text="props.task_value.text"
+                    :value="props.task_text"
                     :disabled="!isEditing"
                 />
             </label>
@@ -98,8 +95,9 @@ function handleClickOutside(event) {
                 <button
                     @click="
                         async () => {
+                            console.log(props.task_id);
                             await invoke('delete_task', {
-                                id: props.task_value.id,
+                                id: props.task_id,
                             });
                         }
                     "

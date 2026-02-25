@@ -18,10 +18,6 @@ listen("list-changed", async (_) => {
     refresh();
 });
 
-function toggleAdding() {
-    isAdding.value = true;
-}
-
 function getTaskKey(task) {
     return `${Object.values(task).join("|")}`;
 }
@@ -60,6 +56,7 @@ onMounted(() => {
         <ul class="task-list">
             <Task
                 v-for="task in tasks"
+                :task_id="task.id"
                 :task_text="task.text"
                 :task_expiration="task.expiration"
                 :task_date="task.date"
@@ -86,7 +83,13 @@ onMounted(() => {
                     }
                 "
             />
-            <AddEntry @click="toggleAdding" />
+            <AddEntry
+                @click="
+                    () => {
+                        isAdding = true;
+                    }
+                "
+            />
         </ul>
     </div>
 </template>
