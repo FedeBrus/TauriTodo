@@ -27,7 +27,7 @@ pub enum SortingMethod {
 #[derive(
     Debug, serde::Serialize, serde::Deserialize, PartialEq, PartialOrd, Eq, Ord, Copy, Clone,
 )]
-enum TaskTag {
+pub enum TaskTag {
     NoTag,
     Work,
     Study,
@@ -64,7 +64,7 @@ fn string_to_date(expiration_string: &str) -> Result<NaiveDate, String> {
 }
 
 impl Task {
-    pub fn new(text: &str, expiration: &str) -> Self {
+    pub fn new(text: &str, expiration: &str, tag: TaskTag) -> Self {
         Self {
             id: Uuid::new_v4().to_string(),
             text: text.to_string(),
@@ -73,7 +73,7 @@ impl Task {
             expiration: string_to_date(&expiration)
                 .ok()
                 .unwrap_or(Local::now().date_naive()),
-            tag: TaskTag::NoTag,
+            tag: tag,
         }
     }
 
@@ -84,7 +84,6 @@ impl Task {
             self.status = TaskStatus::Todo;
         }
     }
-
 
     pub fn update_text(&mut self, new_text: &str) {
         if !new_text.is_empty() {
@@ -97,6 +96,10 @@ impl Task {
             self.expiration = naive_date;
         }
     }
+
+    pub fn update_tag(&mut self, new_tag: TaskTag) {
+        self.tag = new_tag;
+    }
 }
 
 fn get_store(app: &AppHandle) -> Result<Arc<Store<Wry>>, String> {
@@ -108,9 +111,14 @@ fn emit_list_change(app: &AppHandle) {
 }
 
 #[tauri::command]
-pub async fn add_task(app: AppHandle, text: String, expiration: String) -> Result<Task, String> {
+pub async fn add_task(
+    app: AppHandle,
+    text: String,
+    expiration: String,
+    tag: TaskTag,
+) -> Result<Task, String> {
     let store = get_store(&app)?;
-    let new_task = Task::new(&text, &expiration);
+    let new_task = Task::new(&text, &expiration, tag);
     store.set(new_task.id.clone(), json!(new_task));
     emit_list_change(&app);
     Ok(new_task)
@@ -170,6 +178,7 @@ pub async fn edit_task(
     id: String,
     text: String,
     expiration: String,
+    tag: TaskTag,
 ) -> Result<(), String> {
     let store = get_store(&app)?;
 
@@ -178,6 +187,7 @@ pub async fn edit_task(
 
         task.update_text(&text);
         task.update_expiration(&expiration);
+        task.update_tag(tag);
 
         store.set(id, serde_json::to_value(task).map_err(|e| e.to_string())?);
         store.save().map_err(|e| e.to_string())?;
