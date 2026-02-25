@@ -91,16 +91,13 @@ function handleClickOutside(event) {
                     "
                 />
             </label>
+            <input type="date" :value="props.task_date" disabled="true" />
             <div class="task-control">
-                <input type="date" :value="props.task_date" disabled="true" />
                 <button
                     @click="
-                        async () => {
-                            console.log(props.task_id);
-                            await invoke('delete_task', {
-                                id: props.task_id,
-                            });
-                        }
+                        invoke('delete_task', {
+                            id: props.task_id,
+                        })
                     "
                 >
                     <img
@@ -112,15 +109,7 @@ function handleClickOutside(event) {
                 <button @click="handleEdit" v-if="!isEditing">
                     <img class="edit" src="../assets/edit.svg" alt="edit" />
                 </button>
-                <button
-                    class="confirm"
-                    @click="
-                        () => {
-                            saveEdit();
-                        }
-                    "
-                    v-if="isEditing"
-                >
+                <button class="confirm" @click="saveEdit" v-if="isEditing">
                     <img src="../assets/confirm.svg" alt="confirm" />
                 </button>
             </div>
