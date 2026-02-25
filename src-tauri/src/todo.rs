@@ -12,8 +12,8 @@ const STORE_PATH: &str = "tasks.json";
     Debug, serde::Serialize, serde::Deserialize, PartialEq, PartialOrd, Eq, Ord, Copy, Clone,
 )]
 enum TaskStatus {
-    Done,
     Todo,
+    Done,
 }
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]

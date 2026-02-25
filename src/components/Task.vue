@@ -82,6 +82,7 @@ function handleClickOutside(event) {
                 <input
                     ref="expirationInput"
                     type="date"
+                    :value="props.task_expiration"
                     :disabled="!isEditing"
                     @change="
                         () => {
@@ -91,7 +92,7 @@ function handleClickOutside(event) {
                 />
             </label>
             <div class="task-control">
-                <input type="date" disabled="true" />
+                <input type="date" :value="props.task_date" disabled="true" />
                 <button
                     @click="
                         async () => {
