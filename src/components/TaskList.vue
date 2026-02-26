@@ -79,10 +79,11 @@ onMounted(() => {
                     }
                 "
                 @save-task="
-                    async (text, expiration) => {
+                    async (text, expiration, tag) => {
                         await invoke('add_task', {
                             text: text,
                             expiration: expiration,
+                            tag: tag,
                         })
                             .then((task) => console.log(task))
                             .catch((e) => console.error(e));

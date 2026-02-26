@@ -1,9 +1,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import SelectTag from "./SelectTag.vue";
 
 const props = defineProps(["text, expiration"]);
 const textInput = ref(null);
 const dateInput = ref(null);
+const tagInput = ref(null);
 const text = ref("");
 const expiration = ref(new Date().toISOString().slice(0, 10));
 const taskContainer = ref(null);
@@ -32,7 +34,7 @@ function checkForSubmit() {
     ) {
         emit("lose-focus");
     } else {
-        emit("save-task", text.value, expiration.value);
+        emit("save-task", text.value, expiration.value, tagInput.value.tag);
     }
 }
 
@@ -55,7 +57,7 @@ defineExpose({ focus });
                     "
                 />
             </label>
-            <div></div>
+            <SelectTag ref="tagInput" />
             <button class="confirm" @click="checkForSubmit">
                 <img src="../assets/confirm.svg" alt="confirm" />
             </button>
