@@ -57,6 +57,8 @@ defineExpose({ focus });
                     "
                 />
             </label>
+            <!-- da fixare con grid column -->
+            <div></div>
             <SelectTag ref="tagInput" />
             <button class="confirm" @click="checkForSubmit">
                 <img src="../assets/confirm.svg" alt="confirm" />

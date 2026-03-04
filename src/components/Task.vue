@@ -7,6 +7,7 @@ const props = defineProps([
     "task_status",
     "task_expiration",
     "task_date",
+    "task_tag",
     "task_id",
 ]);
 const isEditing = ref(false);
@@ -91,6 +92,9 @@ function handleClickOutside(event) {
                 />
             </label>
             <input type="date" :value="props.task_date" disabled="true" />
+            <div>
+                {{ props.task_tag }}
+            </div>
             <div class="task-control">
                 <button
                     @click="

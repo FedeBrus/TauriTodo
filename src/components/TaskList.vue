@@ -68,6 +68,7 @@ onMounted(() => {
                 :task_expiration="task.expiration"
                 :task_date="task.date"
                 :task_status="task.status"
+                :task_tag="task.tag"
                 :key="getTaskKey(task)"
             />
             <NewEntry

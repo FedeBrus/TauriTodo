@@ -57,7 +57,7 @@ img {
 .task {
     font-size: 1rem;
     display: grid;
-    grid-template-columns: 50% 20% 20% auto;
+    grid-template-columns: 50% 15% 15% 15% auto;
     justify-items: start;
     width: 100%;
 }
