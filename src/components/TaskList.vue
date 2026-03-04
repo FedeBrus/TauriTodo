@@ -59,6 +59,7 @@ onMounted(() => {
                     <div>Task:</div>
                     <div>Due to:</div>
                     <div>Created in:</div>
+                    <div>Tag:</div>
                 </div>
             </li>
             <Task
