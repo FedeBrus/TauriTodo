@@ -7,7 +7,7 @@ defineExpose({ tag });
 </script>
 
 <template>
-    <select v-model="sortingMethod">
+    <select v-model="tag">
         <option value="NoTag">No tag</option>
         <option value="Work">Work</option>
         <option value="Study">Study</option>

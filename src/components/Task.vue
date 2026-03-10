@@ -1,6 +1,7 @@
 <script setup>
 import { invoke } from "@tauri-apps/api/core";
 import { nextTick, ref, onMounted, onUnmounted, watch } from "vue";
+import SelectTag from "./SelectTag.vue";
 
 const props = defineProps([
     "task_text",
@@ -15,6 +16,7 @@ const taskContainer = ref(null);
 
 const taskInput = ref(null);
 const expirationInput = ref(null);
+const tagInput = ref(null);
 
 function statusToBoolean(status) {
     if (status == "Done") {
@@ -42,6 +44,7 @@ async function saveEdit() {
         id: props.task_id,
         text: taskInput.value.value,
         expiration: expirationInput.value.value,
+        tag: tagInput.value.tag,
     }).catch((e) => console.log(e));
     isEditing.value = false;
 }
@@ -93,7 +96,10 @@ function handleClickOutside(event) {
             </label>
             <input type="date" :value="props.task_date" disabled="true" />
             <div>
-                {{ props.task_tag }}
+                <SelectTag v-if="isEditing" ref="tagInput" />
+                <span v-else>
+                    {{ props.task_tag }}
+                </span>
             </div>
             <div class="task-control">
                 <button
