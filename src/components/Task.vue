@@ -96,7 +96,11 @@ function handleClickOutside(event) {
             </label>
             <input type="date" :value="props.task_date" disabled="true" />
             <div>
-                <SelectTag v-if="isEditing" ref="tagInput" />
+                <SelectTag
+                    v-if="isEditing"
+                    ref="tagInput"
+                    :initial-value="props.task_tag"
+                />
                 <span v-else>
                     {{ props.task_tag }}
                 </span>
